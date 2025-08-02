@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Trang Chính - Học Toán Vui</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e0f7fa;
+    }
+
+    .dashboard {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .profile-info {
+      text-align: left;
+    }
+
+    .profile-info h3 {
+      margin: 0;
+      color: #00796b;
+    }
+
+    .profile-info p {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .profile img {
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+    }
+
+    .stats {
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+
+    .stats div {
+      text-align: center;
+    }
+
+    .stats h4 {
+      color: #ff9800;
+      margin-bottom: 5px;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .menu button {
+      background-color: #4db6ac;
+      color: white;
+      font-size: 16px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .menu button:hover {
+      background-color: #00897b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard">
+  <div class="profile">
+    <div class="profile-info">
+      <h3>Xin chào, Khoa!</h3>
+      <p>Lớp: 3</p>
+      <p>Email: khoa123@gmail.com</p>
+    </div>
+    <img src="https://i.imgur.com/PMcGSh0.png" alt="Avatar">
+  </div>
+
+  <div class="stats">
+    <div>
+      <h4>⭐ 120 sao</h4>
+      <p>Tổng điểm</p>
+    </div>
+    <div>
+      <h4>📘 75%</h4>
+      <p>Tiến độ học</p>
+    </div>
+  </div>
+
+  <div class="menu">
+    <button onclick="goto('learn')">📘 Học Toán</button>
+    <button onclick="goto('game')">🎮 Chơi Game</button>
+    <button onclick="goto('rank')">🏆 Xếp Hạng</button>
+    <button onclick="goto('reward')">🎁 Phần Thưởng</button>
+    <button onclick="goto('setting')">⚙️ Cài Đặt</button>
+    <button onclick="logout()">🚪 Đăng Xuất</button>
+  </div>
+</div>
+
+<script>
+  function goto(page) {
+    alert("Đi tới: " + page);
+    // Tại đây bạn sẽ chuyển trang, ví dụ:
+    // window.location.href = `${page}.html`;
+  }
+
+  function logout() {
+    alert("Đăng xuất thành công!");
+    // window.location.href = "login.html";
+  }
+</script>
+
+</body>
+</html>

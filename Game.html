@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chơi Game Toán</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f1f8e9;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .game-container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .game-container h2 {
+      margin-bottom: 20px;
+      color: #689f38;
+    }
+
+    .game-question {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .choices button {
+      padding: 12px 24px;
+      font-size: 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #aed581;
+      cursor: pointer;
+    }
+
+    .choices button:hover {
+      background: #7cb342;
+      color: white;
+    }
+
+    #game-feedback {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <h2>🎮 Game Toán - Chọn kết quả đúng</h2>
+    <div class="game-question" id="gameQuestion">4 + 3 = ?</div>
+    <div class="choices">
+      <button onclick="checkAnswer(5)">5</button>
+      <button onclick="checkAnswer(7)">7</button>
+      <button onclick="checkAnswer(9)">9</button>
+    </div>
+    <div id="game-feedback"></div>
+  </div>
+
+  <script>
+    const correctGameAnswer = 7;
+
+    function checkAnswer(value) {
+      const fb = document.getElementById("game-feedback");
+      if (value === correctGameAnswer) {
+        fb.textContent = "✔️ Đúng rồi! Bạn thật giỏi!";
+        fb.style.color = "green";
+      } else {
+        fb.textContent = "❌ Sai mất rồi. Hãy thử lại!";
+        fb.style.color = "red";
+      }
+    }
+  </script>
+
+</body>
+</html>

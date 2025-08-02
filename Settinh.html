@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Cài Đặt</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e1f5fe;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .settings {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .settings label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    .settings input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .settings button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #0288d1;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="settings">
+    <h2>⚙️ Cài Đặt Tài Khoản</h2>
+    <label>Tên người dùng</label>
+    <input type="text" value="khoa123">
+
+    <label>Mật khẩu mới</label>
+    <input type="password" placeholder="•••••••">
+
+    <label>Avatar URL</label>
+    <input type="text" placeholder="https://...">
+
+    <button onclick="alert('Lưu thành công!')">Lưu thay đổi</button>
+  </div>
+
+</body>
+</html>

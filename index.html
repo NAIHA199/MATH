@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Học Toán Vui</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f0f8ff;
+      padding-bottom: 50px;
+    }
+
+    nav {
+      display: flex;
+      background: #4caf50;
+      padding: 10px;
+      justify-content: space-around;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    section {
+      display: none;
+      padding: 20px;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    /* Reuse styles from previous components */
+    .container, .dashboard, .lesson-container, .game-container, .gift-box, .settings {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .input-group, input, button, .question, .feedback, table, .gift, .settings label, .settings input {
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #388e3c;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .gift {
+      background: #fffde7;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 10px;
+      display: inline-block;
+    }
+
+    .gift img {
+      width: 100px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border-bottom: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    th {
+      background: #c8e6c9;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <button onclick="showTab('login')">Đăng Nhập</button>
+    <button onclick="showTab('dashboard')">Trang Chính</button>
+    <button onclick="showTab('hoc')">Học</button>
+    <button onclick="showTab('game')">Game</button>
+    <button onclick="showTab('rank')">Xếp Hạng</button>
+    <button onclick="showTab('reward')">Thưởng</button>
+    <button onclick="showTab('setting')">Cài Đặt</button>
+  </nav>
+
+  <!-- Tab 1: Đăng Nhập -->
+  <section id="login" class="active">
+    <div class="container">
+      <h2>Đăng Nhập</h2>
+      <input type="text" placeholder="Tên đăng nhập"><br>
+      <input type="password" placeholder="Mật khẩu"><br>
+      <button onclick="showTab('dashboard')">Đăng Nhập</button>
+      <p>Chưa có tài khoản? <a onclick="alert('Chức năng đăng ký chưa hỗ trợ')">Đăng ký</a></p>
+    </div>
+  </section>
+
+  <!-- Tab 2: Dashboard -->
+  <section id="dashboard">
+    <div class="dashboard">
+      <h2>Xin chào, Khoa 👋</h2>
+      <p>Lớp: 3</p>
+      <p>Email: khoa123@gmail.com</p>
+      <p>⭐ Tổng sao: 120</p>
+      <p>📘 Tiến độ học: 75%</p>
+    </div>
+  </section>
+
+  <!-- Tab 3: Học Toán -->
+  <section id="hoc">
+    <div class="lesson-container">
+      <h2>Bài: Cộng trong phạm vi 10</h2>
+      <div class="question" id="question">3 + 5 = ?</div>
+      <input type="number" id="answerInput" placeholder="Nhập kết quả">
+      <button onclick="submitAnswer()">Nộp bài</button>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </section>
+
+  <!-- Tab 4: Game -->
+  <section id="game">
+    <div class="game-container">
+      <h2>🎮 Chọn kết quả đúng</h2>
+      <div class="question" id="gameQuestion">4 + 3 = ?</div>
+      <div class="choices">
+        <button onclick="checkAnswer(5)">5</button>
+        <button onclick="checkAnswer(7)">7</button>
+        <button onclick="checkAnswer(9)">9</button>
+      </div>
+      <div id="game-feedback" class="feedback"></div>
+    </div>
+  </section>
+
+  <!-- Tab 5: Xếp Hạng -->
+  <section id="rank">
+    <div class="container">
+      <h2>🏆 Bảng Xếp Hạng</h2>
+      <table>
+        <tr><th>Hạng</th><th>Tên</th><th>Sao</th></tr>
+        <tr><td>1</td><td>Bé Na</td><td>150 ⭐</td></tr>
+        <tr><td>2</td><td>Minh</td><td>130 ⭐</td></tr>
+        <tr><td>3</td><td>Hùng</td><td>120 ⭐</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- Tab 6: Phần Thưởng -->
+  <section id="reward">
+    <div class="container">
+      <h2>🎁 Phần Thưởng</h2>
+      <div class="gift-box">
+        <div class="gift">
+          <img src="https://i.imgur.com/yXIpzAh.png">
+          <p>Sticker (20 ⭐)</p>
+          <button>Đổi</button>
+        </div>
+        <div class="gift">
+          <img src="https://i.imgur.com/3xlCJ7A.png">
+          <p>Avatar mới (40 ⭐)</p>
+          <button>Đổi</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab 7: Cài Đặt -->
+  <section id="setting">
+    <div class="settings">
+      <h2>⚙️ Cài Đặt</h2>
+      <label>Tên người dùng</label>
+      <input type="text" value="khoa123">
+
+      <label>Mật khẩu mới</label>
+      <input type="password" placeholder="•••••••">
+
+      <label>URL ảnh đại diện</label>
+      <input type="text" placeholder="https://...">
+
+      <button onclick="alert('Đã lưu thay đổi!')">Lưu</button>
+    </div>
+  </section>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll("section").forEach(sec => {
+        sec.classList.remove("active");
+      });
+      document.getElementById(tabId).classList.add("active");
+    }
+
+    function submitAnswer() {
+      const answer = Number(document.getElementById("answerInput").value);
+      const feedback = document.getElementById("feedback");
+      const correctAnswer = 8;
+
+      if (isNaN(answer)) {
+        feedback.textContent = "❗ Hãy nhập số!";
+        feedback.style.color = "orange";
+      } else if (answer === correctAnswer) {
+        feedback.textContent = "🎉 Chính xác!";
+        feedback.style.color = "green";
+      } else {
+        feedback.textContent = "Sai rồi. Đáp án là " + correctAnswer;
+        feedback.style.color = "red";
+      }
+    }
+
+    function checkAnswer(choice) {
+      const feedback = document.getElementById("game-feedback");
+      const correct = 7;
+      if (choice === correct) {
+        feedback.textContent = "✔️ Đúng rồi!";
+        feedback.style.color = "green";
+      } else {
+        feedback.textContent = "❌ Sai rồi!";
+        feedback.style.color = "red";
+      }
+    }
+  </script>
+
+</body>
+</html>

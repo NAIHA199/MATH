@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng nhập - Học Toán Vui</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: #f0f8ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      width: 350px;
+      background: #fff;
+      padding: 30px 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .container h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      font-size: 14px;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .switch {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .switch a {
+      color: #007bff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="login-form">
+      <h2>Đăng Nhập</h2>
+      <div class="input-group">
+        <label>Tên đăng nhập hoặc Email</label>
+        <input type="text" placeholder="hocsinh123">
+      </div>
+      <div class="input-group">
+        <label>Mật khẩu</label>
+        <input type="password" placeholder="********">
+      </div>
+      <button onclick="alert('Đăng nhập thành công!')">Đăng Nhập</button>
+      <div class="switch">
+        Chưa có tài khoản? <a onclick="switchToRegister()">Đăng ký</a>
+      </div>
+    </div>
+
+    <div id="register-form" class="hidden">
+      <h2>Đăng Ký</h2>
+      <div class="input-group">
+        <label>Tên học sinh</label>
+        <input type="text" placeholder="Nguyễn Minh Khoa">
+      </div>
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" placeholder="email@example.com">
+      </div>
+      <div class="input-group">
+        <label>Mật khẩu</label>
+        <input type="password" placeholder="********">
+      </div>
+      <div class="input-group">
+        <label>Nhập lại mật khẩu</label>
+        <input type="password" placeholder="********">
+      </div>
+      <button onclick="alert('Đăng ký thành công!')">Đăng Ký</button>
+      <div class="switch">
+        Đã có tài khoản? <a onclick="switchToLogin()">Đăng nhập</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById("login-form");
+    const registerForm = document.getElementById("register-form");
+
+    function switchToRegister() {
+      loginForm.classList.add("hidden");
+      registerForm.classList.remove("hidden");
+    }
+
+    function switchToLogin() {
+      registerForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>

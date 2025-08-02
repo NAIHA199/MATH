@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Học Toán</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fefbd8;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .lesson-container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .lesson-container h2 {
+      color: #3e8e41;
+    }
+
+    .question {
+      font-size: 26px;
+      margin: 20px 0;
+      color: #333;
+    }
+
+    input[type="number"] {
+      padding: 12px;
+      font-size: 20px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .feedback {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="lesson-container">
+    <h2>Bài: Cộng trong phạm vi 10</h2>
+    <div class="question" id="question">3 + 5 = ?</div>
+    <input type="number" id="answerInput" placeholder="Nhập kết quả">
+    <button onclick="submitAnswer()">Nộp bài</button>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <script>
+    const correctAnswer = 8;
+
+    function submitAnswer() {
+      const ans = Number(document.getElementById("answerInput").value);
+      const feedback = document.getElementById("feedback");
+
+      if (isNaN(ans)) {
+        feedback.textContent = "❗ Hãy nhập số!";
+        feedback.style.color = "orange";
+      } else if (ans === correctAnswer) {
+        feedback.textContent = "🎉 Chính xác! Bạn nhận được 5 sao!";
+        feedback.style.color = "green";
+      } else {
+        feedback.textContent = "😕 Sai rồi. Đáp án đúng là " + correctAnswer;
+        feedback.style.color = "red";
+      }
+    }
+  </script>
+
+</body>
+</html>
