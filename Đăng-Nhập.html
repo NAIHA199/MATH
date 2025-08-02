@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Học Toán Vui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  @vite('resources/css/app.css') {{-- Nếu bạn dùng Vite --}}
   <style>
     * {
       box-sizing: border-box;
@@ -11,12 +13,11 @@
 
     body {
       margin: 0;
-      background: url('images/back.jpg') no-repeat center center fixed;
+      background: url('{{ asset("images/back.jpg") }}') no-repeat center center fixed;
       background-size: cover;
       min-height: 100vh;
     }
 
-    /* ==== NAVIGATION BAR ==== */
     header {
       width: 100%;
       padding: 20px 40px;
@@ -54,7 +55,6 @@
       color: white;
     }
 
-    /* ==== MAIN CONTENT ==== */
     main {
       margin-top: 120px;
       text-align: center;
@@ -62,22 +62,12 @@
       text-shadow: 1px 1px 3px #000;
     }
 
-    main h1 {
-      font-size: 48px;
-      margin-bottom: 20px;
-    }
+    main h1 { font-size: 48px; margin-bottom: 20px; }
+    main p { font-size: 20px; }
 
-    main p {
-      font-size: 20px;
-    }
-
-    /* ==== MODALS ==== */
     .modal {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.6);
       display: flex;
       justify-content: center;
@@ -102,12 +92,6 @@
       font-size: 22px;
       cursor: pointer;
       color: #999;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
     }
 
     .input-group {
@@ -167,11 +151,20 @@
     .hidden {
       display: none;
     }
+
+    .alert {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 10px;
+      margin: 20px auto;
+      width: 400px;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- Header -->
   <header>
     <div class="logo">Học Toán Vui</div>
     <nav>
@@ -180,62 +173,71 @@
     </nav>
   </header>
 
-  <!-- MAIN SECTION -->
+  <!-- Main Section -->
   <main>
     <h1>Chào mừng bạn đến với Học Toán Vui</h1>
     <p>Hành trình học toán thông minh và thú vị bắt đầu từ đây!</p>
+    @if(session('success'))
+      <div class="alert">{{ session('success') }}</div>
+    @endif
   </main>
 
-  <!-- LOGIN MODAL -->
+  <!-- Login Modal -->
   <div class="modal hidden" id="loginModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModals()">×</span>
       <h2>Đăng Nhập</h2>
-      <div class="input-group">
-        <label>Email hoặc tên đăng nhập</label>
-        <input type="text" placeholder="example@domain.com">
-      </div>
-      <div class="input-group">
-        <label>Mật khẩu</label>
-        <input type="password" placeholder="********">
-      </div>
-      <button class="btn" onclick="alert('Đăng nhập thành công!')">Đăng Nhập</button>
+      <form method="POST" action="{{ route('login') }}">
+        @csrf
+        <div class="input-group">
+          <label>Email hoặc tên đăng nhập</label>
+          <input type="text" name="email" required>
+        </div>
+        <div class="input-group">
+          <label>Mật khẩu</label>
+          <input type="password" name="password" required>
+        </div>
+        <button class="btn">Đăng Nhập</button>
+      </form>
     </div>
   </div>
 
-  <!-- REGISTER MODAL -->
+  <!-- Register Modal -->
   <div class="modal hidden" id="registerModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModals()">×</span>
       <h2>Đăng Ký</h2>
+      <form method="POST" action="{{ route('register') }}">
+        @csrf
+        <div class="role-select">
+          <div class="role-option" onclick="selectRole(this, 'student')">Học Sinh</div>
+          <div class="role-option" onclick="selectRole(this, 'teacher')">Giáo Viên</div>
+          <div class="role-option" onclick="selectRole(this, 'parent')">Phụ Huynh</div>
+        </div>
+        <input type="hidden" name="role" id="selectedRole">
 
-      <div class="role-select">
-        <div class="role-option" onclick="selectRole(this, 'student')">Học Sinh</div>
-        <div class="role-option" onclick="selectRole(this, 'teacher')">Giáo Viên</div>
-        <div class="role-option" onclick="selectRole(this, 'parent')">Phụ Huynh</div>
-      </div>
-
-      <div class="input-group">
-        <label>Họ và tên</label>
-        <input type="text" placeholder="Nguyễn Văn A">
-      </div>
-      <div class="input-group">
-        <label>Email</label>
-        <input type="email" placeholder="example@gmail.com">
-      </div>
-      <div class="input-group">
-        <label>Mật khẩu</label>
-        <input type="password" placeholder="********">
-      </div>
-      <div class="input-group">
-        <label>Nhập lại mật khẩu</label>
-        <input type="password" placeholder="********">
-      </div>
-      <button class="btn" onclick="handleRegister()">Đăng Ký</button>
+        <div class="input-group">
+          <label>Họ và tên</label>
+          <input type="text" name="name" required>
+        </div>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="input-group">
+          <label>Mật khẩu</label>
+          <input type="password" name="password" required>
+        </div>
+        <div class="input-group">
+          <label>Nhập lại mật khẩu</label>
+          <input type="password" name="password_confirmation" required>
+        </div>
+        <button class="btn">Đăng Ký</button>
+      </form>
     </div>
   </div>
 
-  <!-- SCRIPT -->
+  <!-- Scripts -->
   <script>
     const loginModal = document.getElementById('loginModal');
     const registerModal = document.getElementById('registerModal');
@@ -259,24 +261,16 @@
 
     function selectRole(element, role) {
       selectedRole = role;
+      document.getElementById('selectedRole').value = role;
       document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
       element.classList.add('selected');
     }
 
     function clearRoleSelection() {
       selectedRole = null;
+      document.getElementById('selectedRole').value = '';
       document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
     }
-
-    function handleRegister() {
-      if (!selectedRole) {
-        alert("Vui lòng chọn vai trò.");
-        return;
-      }
-      alert(`Đăng ký thành công với vai trò: ${selectedRole === 'student' ? 'Học Sinh' : selectedRole === 'teacher' ? 'Giáo Viên' : 'Phụ Huynh'}`);
-      closeModals();
-    }
   </script>
-
 </body>
 </html>
