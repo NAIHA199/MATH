@@ -1,84 +1,310 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Chơi Game Toán</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f1f8e9;
-      text-align: center;
-      padding: 30px;
-    }
-
-    .game-container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .game-container h2 {
-      margin-bottom: 20px;
-      color: #689f38;
-    }
-
-    .game-question {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-
-    .choices button {
-      padding: 12px 24px;
-      font-size: 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #aed581;
-      cursor: pointer;
-    }
-
-    .choices button:hover {
-      background: #7cb342;
-      color: white;
-    }
-
-    #game-feedback {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game: Hứng Táo Toán Học</title>
+    <!-- Tải font từ Google Fonts để game trông đẹp hơn -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #87CEEB; /* Bầu trời xanh */
+            color: #333;
+            overflow: hidden;
+        }
+        #gameContainer {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.23);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        canvas {
+            background-color: #f0f8ff; /* Màu nền canvas nhẹ nhàng */
+            border-radius: 15px;
+            cursor: none; /* Ẩn con trỏ chuột trên canvas */
+        }
+        #gameOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            text-align: center;
+        }
+        #restartButton {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            background-color: #FF6347; /* Màu cam cà chua */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        #restartButton:hover {
+            background-color: #E5533D;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="game-container">
-    <h2>🎮 Game Toán - Chọn kết quả đúng</h2>
-    <div class="game-question" id="gameQuestion">4 + 3 = ?</div>
-    <div class="choices">
-      <button onclick="checkAnswer(5)">5</button>
-      <button onclick="checkAnswer(7)">7</button>
-      <button onclick="checkAnswer(9)">9</button>
+<div id="gameContainer">
+    <h1 class="text-3xl font-bold mb-2 text-slate-700">Hứng Táo Toán Học</h1>
+    <p class="text-lg mb-4 text-slate-500">Di chuyển chuột để hứng quả táo có đáp án đúng nhé!</p>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="gameOverlay" style="display: none;">
+        <h2 id="gameOverTitle" class="text-5xl font-bold">Game Over!</h2>
+        <p id="finalScore" class="text-2xl mt-4"></p>
+        <button id="restartButton">Chơi lại</button>
     </div>
-    <div id="game-feedback"></div>
-  </div>
+</div>
 
-  <script>
-    const correctGameAnswer = 7;
+<script>
+    // --- KHỞI TẠO ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gameOverlay = document.getElementById('gameOverlay');
+    const finalScoreEl = document.getElementById('finalScore');
+    const restartButton = document.getElementById('restartButton');
 
-    function checkAnswer(value) {
-      const fb = document.getElementById("game-feedback");
-      if (value === correctGameAnswer) {
-        fb.textContent = "✔️ Đúng rồi! Bạn thật giỏi!";
-        fb.style.color = "green";
-      } else {
-        fb.textContent = "❌ Sai mất rồi. Hãy thử lại!";
-        fb.style.color = "red";
-      }
+    // --- BIẾN TOÀN CỤC CHO GAME ---
+    let score = 0;
+    let lives = 3;
+    let gameRunning = true;
+
+    let currentProblem = {
+        question: "",
+        correctAnswer: 0
+    };
+
+    // --- CẤU HÌNH NHÂN VẬT VÀ VẬT PHẨM ---
+    const basket = {
+        width: 120,
+        height: 60,
+        x: canvas.width / 2 - 60,
+        y: canvas.height - 70,
+        color: '#8B4513' // Màu nâu của gỗ
+    };
+
+    let apples = [];
+    const appleRadius = 30;
+    const appleFallSpeed = 2;
+
+    // --- HÀM VẼ ĐỒ HỌA ---
+
+    // Vẽ cái giỏ
+    function drawBasket() {
+        ctx.fillStyle = basket.color;
+        ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
+        // Vẽ thêm cái quai giỏ cho đẹp
+        ctx.strokeStyle = basket.color;
+        ctx.lineWidth = 10;
+        ctx.beginPath();
+        ctx.arc(basket.x + basket.width / 2, basket.y, basket.width / 2, Math.PI, 2 * Math.PI);
+        ctx.stroke();
     }
-  </script>
+
+    // Vẽ một quả táo
+    function drawApple(apple) {
+        // Thân táo
+        ctx.beginPath();
+        ctx.arc(apple.x, apple.y, appleRadius, 0, Math.PI * 2);
+        ctx.fillStyle = apple.color;
+        ctx.fill();
+        ctx.closePath();
+
+        // Cuống táo
+        ctx.fillStyle = '#5C4033'; // Màu nâu sẫm
+        ctx.fillRect(apple.x - 2, apple.y - appleRadius - 5, 4, 10);
+        
+        // Lá
+        ctx.beginPath();
+        ctx.moveTo(apple.x, apple.y - appleRadius);
+        ctx.quadraticCurveTo(apple.x + 10, apple.y - appleRadius - 15, apple.x + 20, apple.y - appleRadius);
+        ctx.fillStyle = 'green';
+        ctx.fill();
+        ctx.closePath();
+
+
+        // Vẽ số trên quả táo
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 28px Quicksand';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(apple.number, apple.x, apple.y);
+    }
+
+    // Vẽ thông tin game (Điểm, Mạng, Phép tính)
+    function drawGameInfo() {
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 28px Quicksand';
+        
+        // Điểm
+        ctx.textAlign = 'left';
+        ctx.fillText(`Điểm: ${score}`, 20, 40);
+        
+        // Mạng
+        ctx.textAlign = 'right';
+        ctx.fillText(`Mạng: ${'❤️'.repeat(lives)}`, canvas.width - 20, 40);
+
+        // Phép tính
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 48px Quicksand';
+        ctx.fillText(currentProblem.question, canvas.width / 2, 60);
+    }
+
+    // --- LOGIC GAME ---
+
+    // Tạo phép tính mới
+    function generateNewProblem() {
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 10) + 1;
+        currentProblem.correctAnswer = num1 + num2;
+        currentProblem.question = `${num1} + ${num2} = ?`;
+
+        generateApples();
+    }
+
+    // Tạo các quả táo (1 đúng, 3 sai)
+    function generateApples() {
+        apples = [];
+        let answers = new Set([currentProblem.correctAnswer]);
+
+        // Tạo các đáp án sai ngẫu nhiên, không trùng lặp
+        while (answers.size < 4) {
+            let wrongAnswer = currentProblem.correctAnswer + (Math.floor(Math.random() * 5) - 2);
+            if (wrongAnswer > 0 && wrongAnswer !== currentProblem.correctAnswer) {
+                answers.add(wrongAnswer);
+            }
+        }
+
+        let answerArray = Array.from(answers);
+        // Xáo trộn vị trí các đáp án
+        answerArray.sort(() => Math.random() - 0.5);
+
+        // Tạo đối tượng quả táo
+        answerArray.forEach((ans, index) => {
+            apples.push({
+                x: (canvas.width / 5) * (index + 1),
+                y: -appleRadius - Math.random() * 200, // Xuất hiện ngẫu nhiên từ trên cao
+                number: ans,
+                color: ans === currentProblem.correctAnswer ? '#DC143C' : '#FFD700' // Táo đỏ cho đáp án đúng, vàng cho đáp án sai
+            });
+        });
+    }
+
+    // Cập nhật trạng thái game trong mỗi khung hình
+    function update() {
+        if (!gameRunning) return;
+
+        // Di chuyển các quả táo xuống
+        apples.forEach(apple => {
+            apple.y += appleFallSpeed;
+
+            // Kiểm tra va chạm với giỏ
+            if (apple.y + appleRadius > basket.y &&
+                apple.x > basket.x &&
+                apple.x < basket.x + basket.width) {
+                
+                if (apple.number === currentProblem.correctAnswer) {
+                    // Trả lời đúng
+                    score += 10;
+                    // (Tùy chọn) Thêm âm thanh
+                } else {
+                    // Trả lời sai
+                    lives--;
+                }
+                
+                // Tạo bài toán mới
+                if (lives > 0) {
+                    generateNewProblem();
+                } else {
+                    endGame();
+                }
+            }
+
+            // Nếu táo rơi ra ngoài
+            if (apple.y > canvas.height) {
+                // Chỉ reset lại vị trí của quả táo đó để nó rơi lại
+                apple.y = -appleRadius - Math.random() * 200;
+                apple.x = (Math.random() * (canvas.width - 100)) + 50;
+            }
+        });
+    }
+
+    // Vẽ lại toàn bộ canvas
+    function draw() {
+        // Xóa canvas cũ
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if (gameRunning) {
+            drawBasket();
+            apples.forEach(drawApple);
+            drawGameInfo();
+        }
+    }
+    
+    // Vòng lặp chính của game
+    function gameLoop() {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
+    
+    // Kết thúc game
+    function endGame() {
+        gameRunning = false;
+        gameOverlay.style.display = 'flex';
+        finalScoreEl.textContent = `Điểm cuối cùng của bạn: ${score}`;
+    }
+
+    // Bắt đầu lại game
+    function restartGame() {
+        score = 0;
+        lives = 3;
+        gameRunning = true;
+        gameOverlay.style.display = 'none';
+        generateNewProblem();
+    }
+
+    // --- ĐIỀU KHIỂN ---
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        let mouseX = e.clientX - rect.left;
+        
+        // Giữ cho giỏ không đi ra ngoài màn hình
+        if (mouseX > basket.width / 2 && mouseX < canvas.width - basket.width / 2) {
+            basket.x = mouseX - basket.width / 2;
+        }
+    });
+
+    restartButton.addEventListener('click', restartGame);
+
+    // --- BẮT ĐẦU GAME ---
+    generateNewProblem();
+    gameLoop();
+
+</script>
 
 </body>
 </html>
