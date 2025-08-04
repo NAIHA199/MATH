@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Học Toán Vui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  @vite('resources/css/app.css')
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: url('{{ asset("images/back.jpg") }}') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      padding: 20px 40px;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    nav button {
+      margin-left: 15px;
+      padding: 10px 18px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: 2px solid #4CAF50;
+      background-color: white;
+      color: #4CAF50;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    nav button:hover {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    main {
+      margin-top: 120px;
+      text-align: center;
+      color: #fff;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    main h1 { font-size: 48px; margin-bottom: 20px; }
+    main p { font-size: 20px; }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px 25px;
+      border-radius: 12px;
+      width: 400px;
+      max-width: 95%;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .role-select {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .role-option {
+      flex: 1;
+      padding: 10px;
+      background: #f0f0f0;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .role-option.selected {
+      border-color: #4CAF50;
+      background-color: #e0ffe0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .alert {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 10px;
+      margin: 20px auto;
+      width: 400px;
+      border-radius: 6px;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">Học Toán Vui</div>
+    <nav>
+      <button onclick="openLogin()">Log in</button>
+      <button onclick="openRegister()">Sign up</button>
+    </nav>
+  </header>
+
+  <!-- Main Section -->
+  <main>
+    <h1>Chào mừng bạn đến với Học Toán Vui</h1>
+    <p>Hành trình học toán thông minh và thú vị bắt đầu từ đây!</p>
+    @if(session('success'))
+      <div class="alert">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+      <div class="alert error">{{ session('error') }}</div>
+    @endif
+  </main>
+
+  <!-- Login Modal -->
+  <div class="modal hidden" id="loginModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModals()">×</span>
+      <h2>Đăng Nhập</h2>
+      <form method="POST" action="{{ route('login') }}">
+        @csrf
+        <div class="input-group">
+          <label>Email hoặc tên đăng nhập</label>
+          <input type="text" name="email" required value="{{ old('email') }}">
+          @error('email')
+            <small style="color: red;">{{ $message }}</small>
+          @enderror
+        </div>
+        <div class="input-group">
+          <label>Mật khẩu</label>
+          <input type="password" name="password" required>
+          @error('password')
+            <small style="color: red;">{{ $message }}</small>
+          @enderror
+        </div>
+        <button class="btn">Đăng Nhập</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal hidden" id="registerModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModals()">×</span>
+      <h2>Đăng Ký</h2>
+      <form method="POST" action="{{ route('register') }}">
+        @csrf
+        <div class="role-select">
+          <div class="role-option" onclick="selectRole(this, 'student')">Học Sinh</div>
+          <div class="role-option" onclick="selectRole(this, 'teacher')">Giáo Viên</div>
+          <div class="role-option" onclick="selectRole(this, 'parent')">Phụ Huynh</div>
+        </div>
+        <input type="hidden" name="role" id="selectedRole" value="{{ old('role') }}">
+
+        <div class="input-group">
+          <label>Họ và tên</label>
+          <input type="text" name="name" required value="{{ old('name') }}">
+          @error('name')
+            <small style="color: red;">{{ $message }}</small>
+          @enderror
+        </div>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" name="email" required value="{{ old('email') }}">
+          @error('email')
+            <small style="color: red;">{{ $message }}</small>
+          @enderror
+        </div>
+        <div class="input-group">
+          <label>Mật khẩu</label>
+          <input type="password" name="password" required>
+          @error('password')
+            <small style="color: red;">{{ $message }}</small>
+          @enderror
+        </div>
+        <div class="input-group">
+          <label>Nhập lại mật khẩu</label>
+          <input type="password" name="password_confirmation" required>
+        </div>
+        <button class="btn">Đăng Ký</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    let selectedRole = null;
+
+    function openLogin() {
+      closeModals();
+      loginModal.classList.remove('hidden');
+    }
+
+    function openRegister() {
+      closeModals();
+      registerModal.classList.remove('hidden');
+    }
+
+    function closeModals() {
+      loginModal.classList.add('hidden');
+      registerModal.classList.add('hidden');
+      clearRoleSelection();
+    }
+
+    function selectRole(element, role) {
+      selectedRole = role;
+      document.getElementById('selectedRole').value = role;
+      document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function clearRoleSelection() {
+      selectedRole = null;
+      document.getElementById('selectedRole').value = '';
+      document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+    }
+
+    // Auto-select role if there's an old value
+    document.addEventListener('DOMContentLoaded', function() {
+      const oldRole = document.getElementById('selectedRole').value;
+      if (oldRole) {
+        const roleElement = document.querySelector(`[onclick*="${oldRole}"]`);
+        if (roleElement) {
+          selectRole(roleElement, oldRole);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
