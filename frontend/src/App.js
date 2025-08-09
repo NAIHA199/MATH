@@ -7,34 +7,32 @@ import 'react-toastify/dist/ReactToastify.css';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import AuthenticatedHomePage from './pages/AuthenticatedHomePage';
 import Dashboard from './pages/Dashboard';
 import LessonPage from './pages/LessonPage';
-import ExercisePage from './pages/ExercisePage';
 import GamePage from './pages/GamePage';
 import RewardPage from './pages/RewardPage';
+import ExercisePage from './pages/ExercisePage';
 
-// Import components
-import Navbar from './components/common/Navbar';
+// Import utils
 import { getCurrentUser } from './utils/helpers';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const user = getCurrentUser();
-  // Kiểm tra kỹ hơn giá trị user
-  if (!user || Object.keys(user).length === 0) {
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
   return children;
 };
 
-// Layout Component
-const Layout = ({ children }) => {
-  return (
-    <>
-      <Navbar />
-      <main>{children}</main>
-    </>
-  );
+// Public Route Component (redirect if already logged in)
+const PublicRoute = ({ children }) => {
+  const user = getCurrentUser();
+  if (user) {
+    return <Navigate to="/home" replace />;
+  }
+  return children;
 };
 
 function App() {
@@ -42,60 +40,110 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* Public routes - không cần đăng nhập */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          {/* Public routes */}
+          <Route path="/" element={<HomePage />} />
           
-          {/* Protected routes - cần đăng nhập */}
-          <Route path="/" element={
-            <Layout>
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
-            </Layout>
+          <Route path="/login" element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
           } />
           
-          <Route path="/dashboard" element={
-            <Layout>
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            </Layout>
+          <Route path="/register" element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
           } />
           
-          <Route path="/lessons/:grade" element={
-            <Layout>
-              <ProtectedRoute>
-                <LessonPage />
-              </ProtectedRoute>
-            </Layout>
+          {/* Protected routes - Main authenticated home */}
+          <Route path="/home" element={
+            <ProtectedRoute>
+              <AuthenticatedHomePage />
+            </ProtectedRoute>
           } />
           
-          <Route path="/exercise/:lessonId" element={
-            <Layout>
-              <ProtectedRoute>
-                <ExercisePage />
-              </ProtectedRoute>
-            </Layout>
+          {/* Legacy dashboard redirects */}
+          <Route path="/dashboard" element={<Navigate to="/home" replace />} />
+          <Route path="/student-dashboard" element={<Navigate to="/home" replace />} />
+          <Route path="/teacher-dashboard" element={<Navigate to="/home" replace />} />
+          <Route path="/parent-dashboard" element={<Navigate to="/home" replace />} />
+          
+          {/* Student features */}
+          <Route path="/lessons" element={
+            <ProtectedRoute>
+              <LessonPage />
+            </ProtectedRoute>
           } />
           
           <Route path="/games" element={
-            <Layout>
-              <ProtectedRoute>
-                <GamePage />
-              </ProtectedRoute>
-            </Layout>
+            <ProtectedRoute>
+              <GamePage />
+            </ProtectedRoute>
           } />
           
           <Route path="/rewards" element={
-            <Layout>
-              <ProtectedRoute>
-                <RewardPage />
-              </ProtectedRoute>
-            </Layout>
+            <ProtectedRoute>
+              <RewardPage />
+            </ProtectedRoute>
           } />
           
-          {/* Redirect tất cả các route khác về trang chủ */}
+          <Route path="/progress" element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <h1 className="text-3xl">Trang Tiến độ (Đang phát triển)</h1>
+              </div>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/exercises" element={
+            <ProtectedRoute>
+              <ExercisePage />
+            </ProtectedRoute>
+          } />
+          
+          {/* Teacher specific routes */}
+          <Route path="/classes" element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <h1 className="text-3xl">Quản lý lớp học (Đang phát triển)</h1>
+              </div>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/assignments" element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <h1 className="text-3xl">Quản lý bài tập (Đang phát triển)</h1>
+              </div>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/students" element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <h1 className="text-3xl">Quản lý học sinh (Đang phát triển)</h1>
+              </div>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/reports" element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <h1 className="text-3xl">Báo cáo (Đang phát triển)</h1>
+              </div>
+            </ProtectedRoute>
+          } />
+          
+          {/* Parent specific routes */}
+          <Route path="/children" element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <h1 className="text-3xl">Quản lý con em (Đang phát triển)</h1>
+              </div>
+            </ProtectedRoute>
+          } />
+          
+          {/* Fallback route */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         
@@ -109,7 +157,7 @@ function App() {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="light"
+          theme="dark"
         />
       </div>
     </Router>
