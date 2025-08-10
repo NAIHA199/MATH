@@ -1,52 +1,55 @@
-//Preview các lớp học như hành tinh
 import React from 'react';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+const grades = [
+  { 
+    id: 1, 
+    name: 'Lớp 1', 
+    planet: '🪐',
+    color: 'from-pink-500 to-purple-600',
+    
+    details: ['Số đếm', 'Phép cộng', 'Phép trừ', 'So sánh số', 'Giải toán đơn giản']
+  },
+  { 
+    id: 2, 
+    name: 'Lớp 2', 
+    planet: '🌟',
+    color: 'from-blue-500 to-cyan-600',
+    
+    details: ['Phép trừ', 'Bảng cửu chương', 'Nhân chia cơ bản', 'Giải toán có lời văn']
+  },
+  { 
+    id: 3, 
+    name: 'Lớp 3', 
+    planet: '🌎',
+    color: 'from-green-500 to-teal-600',
+    
+    details: ['Nhân chia', 'Phân số', 'Đại lượng', 'Giải toán nâng cao']
+  },
+  { 
+    id: 4, 
+    name: 'Lớp 4', 
+    planet: '🌕',
+    color: 'from-orange-500 to-red-600',
+    
+    details: ['Hình học', 'Đo lường', 'Tính chu vi, diện tích', 'Giải toán thực tế']
+  },
+  { 
+    id: 5, 
+    name: 'Lớp 5', 
+    planet: '🌠',
+    color: 'from-purple-500 to-indigo-600',
+    
+    details: ['Tỉ số', 'Phần trăm', 'Số thập phân', 'Giải toán tổng hợp']
+  },
+];
 
 const GradeSection = () => {
   const navigate = useNavigate();
 
-  const grades = [
-    { 
-      id: 1, 
-      name: 'Lớp 1', 
-      planet: '🪐',
-      color: 'from-pink-500 to-purple-600',
-      topics: 'Số đếm, Phép cộng cơ bản'
-    },
-    { 
-      id: 2, 
-      name: 'Lớp 2', 
-      planet: '🌟',
-      color: 'from-blue-500 to-cyan-600',
-      topics: 'Phép trừ, Bảng cửu chương'
-    },
-    { 
-      id: 3, 
-      name: 'Lớp 3', 
-      planet: '🌎',
-      color: 'from-green-500 to-teal-600',
-      topics: 'Nhân chia, Phân số'
-    },
-    { 
-      id: 4, 
-      name: 'Lớp 4', 
-      planet: '🌕',
-      color: 'from-orange-500 to-red-600',
-      topics: 'Hình học, Đo lường'
-    },
-    { 
-      id: 5, 
-      name: 'Lớp 5', 
-      planet: '🌠',
-      color: 'from-purple-500 to-indigo-600',
-      topics: 'Tỉ số, Phần trăm'
-    },
-  ];
-
   return (
     <section className="py-20 px-4 relative">
-      {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/10 rounded-full blur-3xl" />
       </div>
@@ -91,8 +94,8 @@ const GradeSection = () => {
                   transform transition-all duration-300
                   group-hover:shadow-2xl group-hover:shadow-purple-500/30
                   w-[220px] h-[240px] flex flex-col justify-center items-center mx-auto
+                  group
                 `}>
-                
                   {/* Animated planet */}
                   <motion.div
                     className="text-6xl mb-4 text-center"
@@ -110,8 +113,17 @@ const GradeSection = () => {
                     {grade.topics}
                   </p>
 
-                  {/* Hover effect */}
-                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Thông tin chi tiết khi hover */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/80 text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl p-4">
+                    <div>
+                      <h4 className="font-bold mb-2">Nội dung học:</h4>
+                      <ul className="text-sm space-y-1">
+                        {grade.details.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Orbital ring */}
