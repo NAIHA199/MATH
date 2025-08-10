@@ -18,7 +18,7 @@ const Footer = () => {
           {/* Logo & Description */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-3xl">🌌</span>
+              <span className="text-3xl">🧮</span>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Math Galaxy
               </h3>

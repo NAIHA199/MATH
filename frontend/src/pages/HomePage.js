@@ -30,8 +30,8 @@ const HomePage = () => {
               key={i}
               className="absolute bg-white rounded-full"
               style={{
-                width: Math.random() * 2 + 'px',
-                height: Math.random() * 2 + 'px',
+                width: '2px',         // Đặt kích thước cố định
+                height: '2px',        // Đặt kích thước cố định
                 left: Math.random() * 100 + '%',
                 top: Math.random() * 100 + '%',
                 opacity: Math.random() * 0.8 + 0.2

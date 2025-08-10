@@ -17,7 +17,7 @@ const GradeSection = () => {
     { 
       id: 2, 
       name: 'Lớp 2', 
-      planet: '🌍',
+      planet: '🌟',
       color: 'from-blue-500 to-cyan-600',
       topics: 'Phép trừ, Bảng cửu chương'
     },
@@ -31,14 +31,14 @@ const GradeSection = () => {
     { 
       id: 4, 
       name: 'Lớp 4', 
-      planet: '🪐',
+      planet: '🌕',
       color: 'from-orange-500 to-red-600',
       topics: 'Hình học, Đo lường'
     },
     { 
       id: 5, 
       name: 'Lớp 5', 
-      planet: '🌌',
+      planet: '🌠',
       color: 'from-purple-500 to-indigo-600',
       topics: 'Tỉ số, Phần trăm'
     },
@@ -90,7 +90,9 @@ const GradeSection = () => {
                   bg-gradient-to-b ${grade.color}
                   transform transition-all duration-300
                   group-hover:shadow-2xl group-hover:shadow-purple-500/30
+                  w-[220px] h-[240px] flex flex-col justify-center items-center mx-auto
                 `}>
+                
                   {/* Animated planet */}
                   <motion.div
                     className="text-6xl mb-4 text-center"
