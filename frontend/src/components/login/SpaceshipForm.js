@@ -9,6 +9,7 @@ const SpaceshipForm = ({ accountType, onSubmit, onBack, isLoading, formType = 'l
   const [formData, setFormData] = useState({ 
     username: '', 
     password: '',
+    confirmPassword: '',
     email: '',
     phone: '',
     fullName: ''
@@ -36,8 +37,9 @@ const SpaceshipForm = ({ accountType, onSubmit, onBack, isLoading, formType = 'l
       if (data.fullName.length >= 2) fuelLevel += 20;
       if (data.username.length >= 3) fuelLevel += 20;
       if (data.email.includes('@')) fuelLevel += 20;
-      if (data.phone.length >= 10) fuelLevel += 20;
+      // Remove phone requirement for parents
       if (data.password.length >= 6) fuelLevel += 20;
+      if (data.password === data.confirmPassword && data.password.length >= 6) fuelLevel += 20;
     }
     
     return fuelLevel;
@@ -62,8 +64,9 @@ const SpaceshipForm = ({ accountType, onSubmit, onBack, isLoading, formType = 'l
     if (!formData.password) newErrors.password = 'Cần mật khẩu!';
     if (formType === 'register') {
       if (!formData.email) newErrors.email = 'Cần email!';
-      if (accountType.id === 'parent' && !formData.phone) {
-        newErrors.phone = 'Phụ huynh cần nhập số điện thoại!';
+      // Remove phone validation for parents
+      if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp!';
       }
     }
     
@@ -152,17 +155,7 @@ const SpaceshipForm = ({ accountType, onSubmit, onBack, isLoading, formType = 'l
                     placeholder="email@example.com"
                   />
 
-                  {accountType.id === 'parent' && (
-                    <ControlPanel
-                      icon={<FaPhone />}
-                      label="Số điện thoại"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={(e) => updateField('phone', e.target.value)}
-                      error={errors.phone}
-                      placeholder="0909123456"
-                    />
-                  )}
+                  {/* Remove phone field for parents */}
                 </>
               )}
 
@@ -191,6 +184,20 @@ const SpaceshipForm = ({ accountType, onSubmit, onBack, isLoading, formType = 'l
                 error={errors.password}
                 placeholder="Nhập mật khẩu"
               />
+              
+              {/* Confirm Password field - Register only */}
+              {formType === 'register' && (
+                <ControlPanel
+                  icon={<FaLock />}
+                  label="Xác nhận mật khẩu"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => updateField('confirmPassword', e.target.value)}
+                  error={errors.confirmPassword}
+                  placeholder="Nhập lại mật khẩu"
+                />
+              )}
 
               {/* Remember me checkbox - Only for login */}
               {formType === 'login' && (
