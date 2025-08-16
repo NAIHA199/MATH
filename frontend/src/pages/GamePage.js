@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getCurrentUser } from '../utils/helpers';
+import AuthenticatedNavbar from '../components/layout/AuthenticatedNavbar';
+import { toast } from 'react-toastify';
 
 // ===================================================================================
 // ## GAME 1: VỆ BINH THIÊN THẠCH (Code hoàn chỉnh)
@@ -772,6 +776,18 @@ const GameMenu = ({ onSelectGame }) => {
 // ===================================================================================
 const GamePage = () => {
     const [activeGameId, setActiveGameId] = useState(null);
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const currentUser = getCurrentUser();
+        if (!currentUser) {
+            toast.error('Vui lòng đăng nhập!');
+            navigate('/login');
+            return;
+        }
+        setUser(currentUser);
+    }, [navigate]);
 
     const handleSelectGame = (gameId) => {
         setActiveGameId(gameId);
@@ -785,27 +801,30 @@ const GamePage = () => {
     const ActiveGame = GAMES.find(g => g.id === activeGameId)?.component;
 
     return (
-        <div className="w-full min-h-screen bg-gray-900 flex justify-center items-center">
-            {/* SỬA LỖI: Thêm lại logic kiểm tra bằng toán tử ba ngôi (? :)
-              - Nếu `ActiveGame` có tồn tại (người dùng đã chọn game), thì hiển thị game đó.
-              - Nếu không, thì hiển thị GameMenu.
-            */}
-            {ActiveGame ? (
-                <div className="relative w-full max-w-4xl"> 
-                    {/* Nút quay lại chỉ hiển thị khi có game đang chạy */}
-                    <button 
-                        onClick={handleBackToMenu} 
-                        className="absolute left-0 -top-14 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-gray-700 text-2xl text-white transition-colors hover:bg-gray-600"
-                        aria-label="Quay lại Menu"
-                    >
-                      🔙
-                    </button>
-                    
-                    <ActiveGame onBack={handleBackToMenu} />
-                </div>
-            ) : (
-                <GameMenu onSelectGame={handleSelectGame} />
-            )}
+        <div className="min-h-screen bg-gray-900">
+            <AuthenticatedNavbar user={user} />
+            <div className="pt-20 flex justify-center items-center min-h-screen">
+                {/* SỬA LỖI: Thêm lại logic kiểm tra bằng toán tử ba ngôi (? :)
+                  - Nếu `ActiveGame` có tồn tại (người dùng đã chọn game), thì hiển thị game đó.
+                  - Nếu không, thì hiển thị GameMenu.
+                */}
+                {ActiveGame ? (
+                    <div className="relative w-full max-w-4xl"> 
+                        {/* Nút quay lại chỉ hiển thị khi có game đang chạy */}
+                        <button 
+                            onClick={handleBackToMenu} 
+                            className="absolute left-0 -top-14 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-gray-700 text-2xl text-white transition-colors hover:bg-gray-600"
+                            aria-label="Quay lại Menu"
+                        >
+                          🔙
+                        </button>
+                        
+                        <ActiveGame onBack={handleBackToMenu} />
+                    </div>
+                ) : (
+                    <GameMenu onSelectGame={handleSelectGame} />
+                )}
+            </div>
         </div>
     );
 };
