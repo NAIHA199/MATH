@@ -79,7 +79,7 @@ const GradeSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/login')}
               className="cursor-pointer"
             >
               <motion.div
